@@ -2,7 +2,7 @@ SRC = main.c
 
 OBJ	= ${SRC:.c=.o}
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -L minilibx -lmlx -lXext -lX11
 
 all:	$(OBJ)
 
