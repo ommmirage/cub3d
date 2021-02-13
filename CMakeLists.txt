@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(cub3d C)
 set(CMAKE_C_STANDARD 99)
 
-add_executable(cub3d main.c)
+add_executable(cub3d main.c structs.h)
 
 include_directories(/usr/include)
 

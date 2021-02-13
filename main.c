@@ -1,21 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "minilibx_linux/mlx.h"
-
-typedef struct s_img
-{
-	void	*img;
-	char	*addr;
-	int 	bits_per_pixel;
-	int 	line_length;
-	int 	endian;
-}			t_img;
-
-typedef struct	s_data
-{
-	void	*mlx;
-	void	*win;
-	t_img	*img;
-}				t_data;
+#include "structs.h"
 
 void	pixel_put(t_img *img, int x, int y, int color)
 {
@@ -27,10 +13,10 @@ void	pixel_put(t_img *img, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int 	key_hook(int keycode, t_data *mlx)
+int 	key_hook(int keycode, t_data *data)
 {
 	if (keycode == 65307)
-		mlx_destroy_window(mlx->mlx, mlx->win);
+		mlx_destroy_window(data->mlx, data->win);
 	printf("%d\n", keycode);
 	return (0);
 }
@@ -41,15 +27,38 @@ int 	mouse_hook(int button, int x, int y)
 	return (0);
 }
 
-int 	render_next_frame(t_data *data)
+void	draw_h_line(t_data *data, int len, int width)
+{
+	int	x;
+	int y;
+
+	x = 0;
+	while (x < len)
+	{
+		y = 0;
+		while (y < width)
+			pixel_put(data->img, x, y++, 0x00FFFF00);
+		x++;
+	}
+}
+
+void	draw_cross(t_data *data)
 {
 	data->img->img = mlx_new_image(data->mlx, 400, 300);
 	data->img->addr = mlx_get_data_addr(data->img->img,
-									 &data->img->bits_per_pixel,
-									 &data->img->line_length,
-									 &data->img->endian);
-	pixel_put(data->img, 5, 5, 0x0000FF00);
-	mlx_put_image_to_window(data->mlx, data->win, data->img->img, 0, 0);
+										&data->img->bits_per_pixel,
+										&data->img->line_length,
+										&data->img->endian);
+	draw_h_line(data, 15, 3);
+	mlx_put_image_to_window(data->mlx, data->win, data->img->img, 0, 15);
+
+}
+
+int 	render_next_frame(t_data *data)
+{
+	draw_cross(data);
+
+	mlx_destroy_image(data->mlx, data->img->img);
 	return (0);
 }
 
@@ -58,7 +67,7 @@ int		main()
 	t_data	data;
 
 	data.mlx = mlx_init();
-	data.win = mlx_new_window(data.mlx, 400, 300, "Hello world!");
+	data.win = mlx_new_window(data.mlx, 1000, 700, "Cub3d");
 
 	mlx_key_hook(data.win, key_hook, &data);
 
