@@ -1,17 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "minilibx_linux/mlx.h"
-#include "structs.h"
-
-void	pixel_put(t_img *img, int x, int y, int color)
-{
-	int 	offset;
-	char	*dst;
-
-	offset = y * img->line_length + x * (img->bits_per_pixel / 8);
-	dst = img->addr + offset;
-	*(unsigned int*)dst = color;
-}
+#include "cub3d.h"
 
 int 	key_hook(int keycode, t_data *data)
 {
@@ -27,38 +17,9 @@ int 	mouse_hook(int button, int x, int y)
 	return (0);
 }
 
-void	draw_h_line(t_data *data, int len, int width)
-{
-	int	x;
-	int y;
-
-	x = 0;
-	while (x < len)
-	{
-		y = 0;
-		while (y < width)
-			pixel_put(data->img, x, y++, 0x00FFFF00);
-		x++;
-	}
-}
-
-void	draw_cross(t_data *data)
-{
-	data->img->img = mlx_new_image(data->mlx, 400, 300);
-	data->img->addr = mlx_get_data_addr(data->img->img,
-										&data->img->bits_per_pixel,
-										&data->img->line_length,
-										&data->img->endian);
-	draw_h_line(data, 15, 3);
-	mlx_put_image_to_window(data->mlx, data->win, data->img->img, 0, 15);
-
-}
-
 int 	render_next_frame(t_data *data)
 {
 	draw_cross(data);
-
-	mlx_destroy_image(data->mlx, data->img->img);
 	return (0);
 }
 

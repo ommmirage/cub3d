@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(cub3d C)
 set(CMAKE_C_STANDARD 99)
 
-add_executable(cub3d main.c structs.h)
+add_executable(cub3d main.c structs.h cub3d.h draw_h_line.c pixel_put.c draw_cross.c draw_v_line.c)
 
 include_directories(/usr/include)
 
